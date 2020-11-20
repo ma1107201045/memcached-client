@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="230.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lingyi.memcachedclient.controller.AddServerController">
+    <children>
+        <TabPane layoutX="100.0" layoutY="31.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <tabs>
+                <Tab text="Add server">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <HBox prefHeight="157.0" prefWidth="350.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                        <VBox prefHeight="164.0" prefWidth="73.0">
+                                            <children>
+                                                <Label text="Name:">
+                                                    <VBox.margin>
+                                                        <Insets left="25.0" top="22.0" />
+                                                    </VBox.margin>
+                                                </Label>
+                                                <Label text="Host:">
+                                                    <VBox.margin>
+                                                        <Insets left="30.0" top="26.0" />
+                                                    </VBox.margin>
+                                                </Label>
+                                                <Label text="Port:">
+                                                    <VBox.margin>
+                                                        <Insets left="32.0" top="26.0" />
+                                                    </VBox.margin>
+                                                </Label>
+                                            </children>
+                                        </VBox>
+                                        <VBox prefHeight="157.0" prefWidth="260.0">
+                                            <children>
+                                                <TextField fx:id="name" text="192.168.68.131">
+                                                    <VBox.margin>
+                                                        <Insets top="18.0" />
+                                                    </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="host" text="192.168.68.131">
+                                                    <VBox.margin>
+                                                        <Insets top="18.0" />
+                                                    </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="port" prefHeight="23.0" prefWidth="111.0" text="11211">
+                                                    <VBox.margin>
+                                                        <Insets top="18.0" />
+                                                    </VBox.margin>
+                                                </TextField>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                <Button layoutX="83.0" layoutY="172.0" mnemonicParsing="false" onAction="#onOk" prefHeight="23.0" prefWidth="55.0" text="Ok" />
+                                <Button layoutX="204.0" layoutY="172.0" minHeight="23.0" mnemonicParsing="false" onAction="#onCancel" prefWidth="55.0" text="Cancel" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>
