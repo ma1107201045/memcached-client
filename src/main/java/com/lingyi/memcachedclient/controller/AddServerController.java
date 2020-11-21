@@ -25,15 +25,12 @@ public class AddServerController implements Initializable {
     private AnchorPane anchorPane;
     @FXML
     private TextField name;
-
     @FXML
     private TextField host;
-
     @FXML
     private TextField port;
-
+    
     @Override
-
     public void initialize(URL location, ResourceBundle resources) {
 
     }

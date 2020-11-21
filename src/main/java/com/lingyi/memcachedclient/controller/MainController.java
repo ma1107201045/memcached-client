@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.rubyeye.xmemcached.KeyIterator;
@@ -39,6 +40,8 @@ public class MainController implements Initializable {
     private ContextMenu rootContextMenu;
 
     private ContextMenu serverContextMenu;
+
+    private ContextMenu tableViewContextMenu;
     @FXML
     private Tab explorer;
     @FXML
@@ -54,9 +57,10 @@ public class MainController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         createRootTreeItem();
-        NodeUtil.treeItem = rootTreeItem;
-        createServerContextMenu();
         createRootContextMenu();
+        createServerContextMenu();
+        createTableViewContextMenu();
+        setIcon();
         treeView.setRoot(rootTreeItem);
         treeView.setOnMouseClicked(mouseEvent -> {
             rootContextMenu.hide();
@@ -97,7 +101,8 @@ public class MainController implements Initializable {
             }
 
         });
-        setIcon();
+        tableView.setOnMouseClicked(mouseEvent -> tableViewContextMenu.hide());
+        tableView.setOnContextMenuRequested(contextMenuEvent -> tableViewContextMenu.show(tableView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
         key.setCellValueFactory(new PropertyValueFactory<>("key"));
         value.setCellValueFactory(new PropertyValueFactory<>("value"));
     }
@@ -108,6 +113,7 @@ public class MainController implements Initializable {
         imageView.setFitWidth(16.0);
         imageView.setFitHeight(16.0);
         rootTreeItem.setGraphic(imageView);
+        NodeUtil.treeItem = rootTreeItem;
     }
 
 
@@ -161,5 +167,15 @@ public class MainController implements Initializable {
         imageView.setFitWidth(16.0);
         imageView.setFitHeight(16.0);
         explorer.setGraphic(imageView);
+    }
+
+    public void createTableViewContextMenu() {
+        tableViewContextMenu = new ContextMenu();
+        MenuItem menuItem1 = new MenuItem("Add");
+        MenuItem menuItem2 = new MenuItem("Remove");
+        MenuItem menuItem3 = new MenuItem("Update");
+        MenuItem menuItem4 = new MenuItem("Refresh");
+        menuItem4.setOnAction(actionEvent -> tableView.refresh());
+        tableViewContextMenu.getItems().addAll(menuItem1, menuItem2, menuItem3, new SeparatorMenuItem(), menuItem4);
     }
 }
