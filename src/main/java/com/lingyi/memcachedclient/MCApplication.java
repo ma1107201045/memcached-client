@@ -14,6 +14,8 @@ public class MCApplication extends Application {
         Scene scene = new Scene(root);
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icon.png")));
         primaryStage.setTitle("Memcached client");
+        primaryStage.setWidth(1024.0);
+        primaryStage.setHeight(768.0);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -2,17 +2,19 @@ package com.lingyi.memcachedclient.controller;
 
 import com.lingyi.memcachedclient.common.NodeUtil;
 import com.lingyi.memcachedclient.pojo.MemcachedConnInfo;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.rubyeye.xmemcached.MemcachedClient;
@@ -29,15 +31,30 @@ public class MainController implements Initializable {
 
     private ContextMenu rootContextMenu;
 
+    private ContextMenu serverContextMenu;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         createRootTreeItem();
         NodeUtil.treeItem = rootTreeItem;
+        createServerContextMenu();
         createRootContextMenu();
         treeView.setRoot(rootTreeItem);
-        treeView.setOnContextMenuRequested(contextMenuEvent -> {
+        treeView.setOnMouseClicked(mouseEvent -> {
             rootContextMenu.hide();
-            rootContextMenu.show(treeView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            serverContextMenu.hide();
+        });
+        treeView.setOnContextMenuRequested(contextMenuEvent -> {
+            int selectIndex = treeView.getSelectionModel().getSelectedIndex();
+            if (selectIndex == 1) {
+                serverContextMenu.hide();
+                rootContextMenu.hide();
+                serverContextMenu.show(treeView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            } else {
+                rootContextMenu.hide();
+                serverContextMenu.hide();
+                rootContextMenu.show(treeView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            }
         });
         treeView.getSelectionModel().selectedItemProperty().addListener(observable -> {
             TreeItem<String> treeItem = treeView.getSelectionModel().getSelectedItem();
@@ -56,6 +73,7 @@ public class MainController implements Initializable {
         imageView.setFitHeight(16.0);
         rootTreeItem.setGraphic(imageView);
     }
+
 
     public void createRootContextMenu() {
         rootContextMenu = new ContextMenu();
@@ -84,6 +102,21 @@ public class MainController implements Initializable {
         MenuItem menuItem3 = new MenuItem("Find forward");
         MenuItem menuItem4 = new MenuItem("Find backward");
         MenuItem menuItem5 = new MenuItem("Refresh");
-        rootContextMenu.getItems().addAll(menuItem1, menuItem2, menuItem3, menuItem4, menuItem5);
+        menuItem5.setOnAction(actionEvent -> treeView.refresh());
+        rootContextMenu.getItems().addAll(menuItem1, new SeparatorMenuItem(), menuItem2, menuItem3, menuItem4, new SeparatorMenuItem(), menuItem5);
+    }
+
+    public void createServerContextMenu() {
+        serverContextMenu = new ContextMenu();
+        MenuItem menuItem1 = new MenuItem("Update");
+        MenuItem menuItem2 = new MenuItem("Remove");
+        MenuItem menuItem3 = new MenuItem("Properties");
+        MenuItem menuItem4 = new MenuItem("Find");
+        MenuItem menuItem5 = new MenuItem("Find forward");
+        MenuItem menuItem6 = new MenuItem("Find backward");
+        MenuItem menuItem7 = new MenuItem("Refresh");
+        menuItem7.setOnAction(actionEvent -> treeView.refresh());
+        serverContextMenu.getItems().addAll(menuItem1, menuItem2, menuItem3, new SeparatorMenuItem(), menuItem4, menuItem5, menuItem6, new SeparatorMenuItem(), menuItem7);
+
     }
 }
