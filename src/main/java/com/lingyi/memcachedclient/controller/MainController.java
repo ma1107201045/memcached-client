@@ -54,7 +54,6 @@ public class MainController implements Initializable {
     private ObservableList<Keys> data;
 
     @Override
-
     public void initialize(URL location, ResourceBundle resources) {
         createRootTreeItem();
         createRootContextMenu();
