@@ -102,7 +102,10 @@ public class MainController implements Initializable {
 
         });
         tableView.setOnMouseClicked(mouseEvent -> tableViewContextMenu.hide());
-        tableView.setOnContextMenuRequested(contextMenuEvent -> tableViewContextMenu.show(tableView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
+        tableView.setOnContextMenuRequested(contextMenuEvent -> {
+            if (treeView.getSelectionModel().getSelectedIndex() > 0)
+                tableViewContextMenu.show(tableView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+        });
         key.setCellValueFactory(new PropertyValueFactory<>("key"));
         value.setCellValueFactory(new PropertyValueFactory<>("value"));
     }
@@ -172,6 +175,26 @@ public class MainController implements Initializable {
     public void createTableViewContextMenu() {
         tableViewContextMenu = new ContextMenu();
         MenuItem menuItem1 = new MenuItem("Add");
+        menuItem1.setOnAction(actionEvent -> {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getResource("/fxml/add-data.fxml"));
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setWidth(350.0);
+                stage.setHeight(270.0);
+                stage.setResizable(false);
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/img/icon.png")));
+                stage.setTitle("Add");
+                stage.initOwner(tableView.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
         MenuItem menuItem2 = new MenuItem("Remove");
         MenuItem menuItem3 = new MenuItem("Update");
         MenuItem menuItem4 = new MenuItem("Refresh");
