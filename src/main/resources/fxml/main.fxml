@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -56,9 +57,18 @@
                                             <children>
                                                 <TabPane prefHeight="279.0" prefWidth="313.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <tabs>
-                                                        <Tab text="Memcached data explorer">
+                                                        <Tab fx:id="explorer" text="Memcached data explorer">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <TableView fx:id="tableView" layoutX="107.0" layoutY="39.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                         <columns>
+                                                            <TableColumn fx:id="key" editable="false" prefWidth="75.0" text="Key" />
+                                                            <TableColumn fx:id="value" editable="false" prefWidth="75.0" text="Value" />
+                                                            <TableColumn editable="false" prefWidth="75.0" text="Size" />
+                                                         </columns>
+                                                      </TableView>
+                                                   </children></AnchorPane>
                                                             </content>
                                                         </Tab>
                                                     </tabs>

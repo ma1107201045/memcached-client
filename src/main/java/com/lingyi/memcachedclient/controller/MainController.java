@@ -1,27 +1,34 @@
 package com.lingyi.memcachedclient.controller;
 
 import com.lingyi.memcachedclient.common.NodeUtil;
+import com.lingyi.memcachedclient.pojo.Keys;
 import com.lingyi.memcachedclient.pojo.MemcachedConnInfo;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.rubyeye.xmemcached.KeyIterator;
 import net.rubyeye.xmemcached.MemcachedClient;
+import net.rubyeye.xmemcached.exception.MemcachedException;
+import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeoutException;
 
 public class MainController implements Initializable {
     @FXML
@@ -32,8 +39,19 @@ public class MainController implements Initializable {
     private ContextMenu rootContextMenu;
 
     private ContextMenu serverContextMenu;
+    @FXML
+    private Tab explorer;
+    @FXML
+    private TableView<Keys> tableView;
+    @FXML
+    private TableColumn<Keys, SimpleStringProperty> key;
+    @FXML
+    private TableColumn<Keys, SimpleStringProperty> value;
+
+    private ObservableList<Keys> data;
 
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
         createRootTreeItem();
         NodeUtil.treeItem = rootTreeItem;
@@ -59,11 +77,29 @@ public class MainController implements Initializable {
         treeView.getSelectionModel().selectedItemProperty().addListener(observable -> {
             TreeItem<String> treeItem = treeView.getSelectionModel().getSelectedItem();
             MemcachedConnInfo memcachedConnInfo = NodeUtil.map.get(treeItem);
+
             if (memcachedConnInfo != null) {
                 MemcachedClient memcachedClient = NodeUtil.map1.get(memcachedConnInfo);
-                System.out.println(memcachedClient);
+                KeyIterator it;
+                try {
+                    it = memcachedClient.getKeyIterator(AddrUtil.getOneAddress(memcachedConnInfo.getHost() + ":" + memcachedConnInfo.getPort()));
+                    List<Keys> keys = new ArrayList<>();
+                    while (it.hasNext()) {
+                        String key = it.next();
+                        String value = memcachedClient.get(key);
+                        keys.add(new Keys(key, value));
+                    }
+                    data = FXCollections.observableArrayList(keys);
+                    tableView.setItems(data);
+                } catch (MemcachedException | InterruptedException | TimeoutException e) {
+                    e.printStackTrace();
+                }
             }
+
         });
+        setIcon();
+        key.setCellValueFactory(new PropertyValueFactory<>("key"));
+        value.setCellValueFactory(new PropertyValueFactory<>("value"));
     }
 
     public void createRootTreeItem() {
@@ -118,5 +154,12 @@ public class MainController implements Initializable {
         menuItem7.setOnAction(actionEvent -> treeView.refresh());
         serverContextMenu.getItems().addAll(menuItem1, menuItem2, menuItem3, new SeparatorMenuItem(), menuItem4, menuItem5, menuItem6, new SeparatorMenuItem(), menuItem7);
 
+    }
+
+    public void setIcon() {
+        ImageView imageView = new ImageView("/img/icon.png");
+        imageView.setFitWidth(16.0);
+        imageView.setFitHeight(16.0);
+        explorer.setGraphic(imageView);
     }
 }
